@@ -5,6 +5,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+/**
+ * @author Romain Piel
+ * Aug 16, 2011 
+ * 
+ * A GDSharedMenu is called by a GDActivity to manage the displaying and the onclick events of a click on menu.
+ * Callbacks redirect either to application or activity specific functions.
+ */
 public class GDSharedMenu {
 	
 	protected static void onCreateOptionsMenu(GDActivity activity, Menu menu) {
