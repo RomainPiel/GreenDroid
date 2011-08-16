@@ -41,7 +41,7 @@ import com.cyrilmottier.android.greendroid.R;
  * 
  * @author Cyril Mottier
  */
-public class GDTabActivity extends TabActivity implements ActionBarActivity {
+public class GDTabActivity extends TabActivity implements ActionBarActivity, MenuBarActivity {
 
     private static final String LOG_TAG = GDTabActivity.class.getSimpleName();
 

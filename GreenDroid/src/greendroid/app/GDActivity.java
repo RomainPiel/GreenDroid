@@ -91,7 +91,7 @@ import com.cyrilmottier.android.greendroid.R;
  * @see {@link GDActivity#setActionBarContentView(View, LayoutParams)}
  * @author Cyril Mottier
  */
-public class GDActivity extends Activity implements ActionBarActivity {
+public class GDActivity extends Activity implements ActionBarActivity, MenuBarActivity {
 
     private static final String LOG_TAG = GDActivity.class.getSimpleName();
 
