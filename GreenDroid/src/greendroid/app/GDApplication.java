@@ -16,6 +16,7 @@
 package greendroid.app;
 
 import greendroid.image.ImageCache;
+import greendroid.widget.MenuBar;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.view.MenuItem;
 
 /**
  * Defines various methods that should be overridden in order to style your
@@ -134,6 +136,16 @@ public class GDApplication extends Application {
             }
         }
     }
+    
+    public MenuBar getApplicationMenuBar() {
+    	return null;
+    }
+    
+    protected Runnable getMenuAction(MenuItem menuItem) {
+    	MenuBar menuBar = getApplicationMenuBar();
+    	return menuBar == null? null : menuBar.get(menuItem.getItemId());
+    }
+    
 
     @Override
     public void onLowMemory() {

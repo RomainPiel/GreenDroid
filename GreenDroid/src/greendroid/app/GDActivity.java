@@ -97,19 +97,29 @@ public class GDActivity extends Activity implements ActionBarActivity, MenuBarAc
 
     private boolean mDefaultConstructorUsed = false;
 
-    private Type mActionBarType;
+    private ActionBar.Type mActionBarType;
     private ActionBarHost mActionBarHost;
     
+    private MenuBar.Type mMenuBarType = MenuBar.Type.Specific;
     private MenuBar mMenuBar;
-    
+        
     public GDActivity() {
-        this(Type.Normal);
+        this(ActionBar.Type.Normal, MenuBar.Type.Default);
         mDefaultConstructorUsed = true;
     }
-
+    
     public GDActivity(ActionBar.Type actionBarType) {
+    	this(actionBarType, MenuBar.Type.Default);
+    }
+    
+    public GDActivity(MenuBar.Type menuBarType) {
+    	this(ActionBar.Type.Normal, menuBarType);
+    }
+    
+    public GDActivity(ActionBar.Type actionBarType, MenuBar.Type menuBarType) {
         super();
         mActionBarType = actionBarType;
+        mMenuBarType = menuBarType;
     }
 
     @Override
@@ -271,6 +281,14 @@ public class GDActivity extends Activity implements ActionBarActivity, MenuBarAc
         final FrameLayout contentView = getContentView();
         contentView.removeAllViews();
         contentView.addView(view);
+    }
+    
+    public void setMenuBarType(MenuBar.Type type) {
+        this.mMenuBarType = type;
+    }
+    
+    public MenuBar.Type getMenuBarType() {
+        return mMenuBarType;
     }
     
     public Runnable getMenuAction(MenuItem menuItem) {

@@ -7,6 +7,10 @@ public class MenuBar extends HashMap<Integer, Runnable> {
 	private static final long serialVersionUID = 1L;
 	private int mLayoutId = 0;
 	
+	public enum Type {
+        Default, Specific
+    }
+	
 	public MenuBar() {
 		super();
 	}
