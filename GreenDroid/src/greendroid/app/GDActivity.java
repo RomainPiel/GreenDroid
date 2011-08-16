@@ -15,14 +15,13 @@
  */
 package greendroid.app;
 
-import com.cyrilmottier.android.greendroid.R;
-
 import greendroid.util.Config;
 import greendroid.widget.ActionBar;
-import greendroid.widget.ActionBarHost;
-import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBar.OnActionBarListener;
 import greendroid.widget.ActionBar.Type;
+import greendroid.widget.ActionBarHost;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.MenuBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -30,9 +29,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+
+import com.cyrilmottier.android.greendroid.R;
 
 /**
  * <p>
@@ -96,7 +99,9 @@ public class GDActivity extends Activity implements ActionBarActivity {
 
     private Type mActionBarType;
     private ActionBarHost mActionBarHost;
-
+    
+    private MenuBar mMenuBar;
+    
     public GDActivity() {
         this(Type.Normal);
         mDefaultConstructorUsed = true;
@@ -132,7 +137,11 @@ public class GDActivity extends Activity implements ActionBarActivity {
         super.onPostCreate(savedInstanceState);
         ensureLayout();
     }
-
+    
+    public void setActionBarType(ActionBar.Type type) {
+        this.mActionBarType = type;
+    }
+    
     public ActionBar.Type getActionBarType() {
         return mActionBarType;
     }
@@ -263,6 +272,23 @@ public class GDActivity extends Activity implements ActionBarActivity {
         contentView.removeAllViews();
         contentView.addView(view);
     }
+    
+    public Runnable getMenuAction(MenuItem menuItem) {
+    	return mMenuBar == null? null : mMenuBar.get(menuItem.getItemId());
+    }
+    
+    public MenuBar addMenuAction(int menuItemId, Runnable action) {
+    	if (mMenuBar == null)	mMenuBar = new MenuBar();
+    	return mMenuBar.put(menuItemId, action);
+    }
+    
+    public void setMenuBar(int resId) {
+    	mMenuBar = new MenuBar(resId);
+    }
+    
+    public MenuBar getMenuBar() {
+    	return mMenuBar;
+    }
 
     public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
         return false;
@@ -305,5 +331,16 @@ public class GDActivity extends Activity implements ActionBarActivity {
             }
         }
     };
-
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    GDSharedMenu.onCreateOptionsMenu(this, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		GDSharedMenu.onOptionsItemSelected(this, item);
+		return true;
+	}
 }
