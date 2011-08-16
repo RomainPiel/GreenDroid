@@ -20,12 +20,14 @@ import greendroid.widget.ActionBar;
 import greendroid.widget.ActionBar.OnActionBarListener;
 import greendroid.widget.ActionBarHost;
 import greendroid.widget.ActionBarItem;
+import greendroid.widget.MenuBar;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -44,6 +46,8 @@ public class GDTabActivity extends TabActivity implements ActionBarActivity {
     private static final String LOG_TAG = GDTabActivity.class.getSimpleName();
 
     private ActionBarHost mActionBarHost;
+    
+    private MenuBar mMenuBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +146,23 @@ public class GDTabActivity extends TabActivity implements ActionBarActivity {
 
     public FrameLayout getContentView() {
         return mActionBarHost.getContentView();
+    }
+    
+    public Runnable getMenuAction(MenuItem menuItem) {
+    	return mMenuBar == null? null : mMenuBar.get(menuItem.getItemId());
+    }
+    
+    public MenuBar addMenuAction(int menuItemId, Runnable action) {
+    	if (mMenuBar == null)	mMenuBar = new MenuBar();
+    	return mMenuBar.put(menuItemId, action);
+    }
+    
+    public void setMenuBar(int resId) {
+    	mMenuBar = new MenuBar(resId);
+    }
+    
+    public MenuBar getMenuBar() {
+    	return mMenuBar;
     }
 
     public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
