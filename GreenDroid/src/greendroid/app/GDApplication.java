@@ -25,8 +25,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import roboguice.application.RoboApplication;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.view.MenuItem;
 
@@ -36,7 +36,7 @@ import android.view.MenuItem;
  * 
  * @author Cyril Mottier
  */
-public class GDApplication extends Application {
+public class GDApplication extends RoboApplication {
     
     /**
      * Used for receiving low memory system notification. You should definitely

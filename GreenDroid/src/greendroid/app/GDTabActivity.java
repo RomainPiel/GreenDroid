@@ -21,7 +21,7 @@ import greendroid.widget.ActionBar.OnActionBarListener;
 import greendroid.widget.ActionBarHost;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.MenuBar;
-import android.app.TabActivity;
+import roboguice.activity.RoboTabActivity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -41,7 +41,7 @@ import com.cyrilmottier.android.greendroid.R;
  * 
  * @author Cyril Mottier
  */
-public class GDTabActivity extends TabActivity implements ActionBarActivity, MenuBarActivity {
+public class GDTabActivity extends RoboTabActivity implements ActionBarActivity, MenuBarActivity {
 
     private static final String LOG_TAG = GDTabActivity.class.getSimpleName();
 
