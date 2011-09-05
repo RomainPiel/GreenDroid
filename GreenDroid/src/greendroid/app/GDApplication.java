@@ -137,21 +137,10 @@ public class GDApplication extends Application {
         }
     }
     
-    /**
-     * Get the Default MenuBar object. This object will appear on each GDActivity with type MenuBar.Type.Default
-     * 
-     * @return the menuBar object
-     */
     public MenuBar getApplicationMenuBar() {
     	return null;
     }
     
-    /**
-     * Get an action for a MenuItem from the application MenuBar object. not supposed to be overridden.
-     * 
-     * @param menuItem a MenuItem to get the action from
-     * @return the action
-     */
     protected Runnable getMenuAction(MenuItem menuItem) {
     	MenuBar menuBar = getApplicationMenuBar();
     	return menuBar == null? null : menuBar.get(menuItem.getItemId());
