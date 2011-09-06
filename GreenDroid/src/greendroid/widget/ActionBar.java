@@ -170,6 +170,10 @@ public class ActionBar extends LinearLayout {
             mTitleView.setText(title);
         }
     }
+    
+    public TextView getTitleView() {
+        return mTitleView;
+    }
 
     public ActionBarItem addItem(ActionBarItem.Type actionBarItemType) {
         return addItem(ActionBarItem.createWithType(this, actionBarItemType), NONE);

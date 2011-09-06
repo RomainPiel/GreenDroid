@@ -29,7 +29,6 @@
 		android:gravity="left|center_vertical"
 		android:singleLine="true"
 		android:textColor="?attr/gdActionBarTitleColor"
-		android:textSize="16sp"
 		android:textStyle="bold"
 		android:paddingRight="10dp"
 		android:paddingLeft="10dp" />
