@@ -18,7 +18,8 @@ package greendroid.image;
 import greendroid.util.Config;
 import greendroid.util.GDUtils;
 
-import java.io.BufferedInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -62,7 +63,7 @@ public class ImageLoader {
     private static final int ON_START = 0x100;
     private static final int ON_FAIL = 0x101;
     private static final int ON_END = 0x102;
-    
+
     private static ImageCache sImageCache;
     private static ExecutorService sExecutor;
     private static BitmapFactory.Options sDefaultOptions;
@@ -75,11 +76,11 @@ public class ImageLoader {
             sExecutor = GDUtils.getExecutor(context);
         }
         if (sDefaultOptions == null) {
-        	sDefaultOptions = new BitmapFactory.Options();
-        	sDefaultOptions.inDither = true;
-        	sDefaultOptions.inScaled = true;
-        	sDefaultOptions.inDensity = DisplayMetrics.DENSITY_MEDIUM;
-        	sDefaultOptions.inTargetDensity = context.getResources().getDisplayMetrics().densityDpi;
+            sDefaultOptions = new BitmapFactory.Options();
+            sDefaultOptions.inDither = true;
+            sDefaultOptions.inScaled = true;
+            sDefaultOptions.inDensity = DisplayMetrics.DENSITY_MEDIUM;
+            sDefaultOptions.inTargetDensity = context.getResources().getDisplayMetrics().densityDpi;
         }
     }
 
@@ -90,7 +91,7 @@ public class ImageLoader {
     public Future<?> loadImage(String url, ImageLoaderCallback callback, ImageProcessor bitmapProcessor) {
         return loadImage(url, callback, bitmapProcessor, null);
     }
-    
+
     public Future<?> loadImage(String url, ImageLoaderCallback callback, ImageProcessor bitmapProcessor, BitmapFactory.Options options) {
         return sExecutor.submit(new ImageFetcher(url, callback, bitmapProcessor, options));
     }
@@ -127,9 +128,9 @@ public class ImageLoader {
 
                 // TODO Cyril: Use a AndroidHttpClient?
                 // FIXME returns null bitmap sometimes.
-                // UPDATE using a BufferedInputStream is much faster and the issue is now minor as it doesn't happen often
+                // UPDATE using a FlushedInputStream is much faster and the issue is now minor as it doesn't happen often
                 InputStream in = new URL(mUrl).openStream();
-                bitmap = BitmapFactory.decodeStream(new BufferedInputStream(in), null, (mOptions == null) ? sDefaultOptions : mOptions);
+                bitmap = BitmapFactory.decodeStream(new FlushedInputStream(in), null, (mOptions == null) ? sDefaultOptions : mOptions);
 
                 if (mBitmapProcessor != null && bitmap != null) {
                     final Bitmap processedBitmap = mBitmapProcessor.processImage(bitmap);
@@ -174,33 +175,57 @@ public class ImageLoader {
 
             switch (msg.what) {
 
-                case ON_START:
-                    if (mCallback != null) {
-                        mCallback.onImageLoadingStarted(ImageLoader.this);
-                    }
-                    break;
+            case ON_START:
+                if (mCallback != null) {
+                    mCallback.onImageLoadingStarted(ImageLoader.this);
+                }
+                break;
 
-                case ON_FAIL:
-                    if (mCallback != null) {
-                        mCallback.onImageLoadingFailed(ImageLoader.this, (Throwable) msg.obj);
-                    }
-                    break;
+            case ON_FAIL:
+                if (mCallback != null) {
+                    mCallback.onImageLoadingFailed(ImageLoader.this, (Throwable) msg.obj);
+                }
+                break;
 
-                case ON_END:
+            case ON_END:
 
-                    final Bitmap bitmap = (Bitmap) msg.obj;
-                    sImageCache.put(mUrl, bitmap);
+                final Bitmap bitmap = (Bitmap) msg.obj;
+                sImageCache.put(mUrl, bitmap);
 
-                    if (mCallback != null) {
-                        mCallback.onImageLoadingEnded(ImageLoader.this, bitmap);
-                    }
-                    break;
+                if (mCallback != null) {
+                    mCallback.onImageLoadingEnded(ImageLoader.this, bitmap);
+                }
+                break;
 
-                default:
-                    super.handleMessage(msg);
-                    break;
+            default:
+                super.handleMessage(msg);
+                break;
             }
         };
     }
 
+    static class FlushedInputStream extends FilterInputStream {
+        public FlushedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long totalBytesSkipped = 0L;
+            while (totalBytesSkipped < n) {
+                long bytesSkipped = in.skip(n - totalBytesSkipped);
+                if (bytesSkipped == 0L) {
+                    int bte = read();
+                    if (bte < 0) {
+                        break;  // we reached EOF
+                    } else {
+                        bytesSkipped = 1; // we read one byte
+                    }
+                }
+                totalBytesSkipped += bytesSkipped;
+            }
+            return totalBytesSkipped;
+        }
+
+    }
 }
