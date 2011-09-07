@@ -18,6 +18,8 @@ package greendroid.image;
 import greendroid.util.Config;
 import greendroid.util.GDUtils;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -124,7 +126,10 @@ public class ImageLoader {
                 }
 
                 // TODO Cyril: Use a AndroidHttpClient?
-                bitmap = BitmapFactory.decodeStream(new URL(mUrl).openStream(), null, (mOptions == null) ? sDefaultOptions : mOptions);
+                // FIXME returns null bitmap sometimes.
+                // UPDATE using a BufferedInputStream is much faster and the issue is now minor as it doesn't happen often
+                InputStream in = new URL(mUrl).openStream();
+                bitmap = BitmapFactory.decodeStream(new BufferedInputStream(in), null, (mOptions == null) ? sDefaultOptions : mOptions);
 
                 if (mBitmapProcessor != null && bitmap != null) {
                     final Bitmap processedBitmap = mBitmapProcessor.processImage(bitmap);
