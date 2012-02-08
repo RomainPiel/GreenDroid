@@ -39,6 +39,7 @@
 		android:textColor="?attr/gdActionBarTitleColor"
 		android:textStyle="bold"
 		android:paddingRight="10dp"
-		android:paddingLeft="10dp"/>
+		android:paddingLeft="10dp"
+		android:gravity="center_vertical"/>
 
 </merge>
